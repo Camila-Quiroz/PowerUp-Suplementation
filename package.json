@@ -1,0 +1,17 @@
+{
+  "name": "powerup-supplementation-sqlserver",
+  "version": "1.0.0",
+  "private": true,
+  "main": "server.cjs",
+  "scripts": {
+    "start": "node server.cjs",
+    "dev": "node server.cjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "msnodesqlv8": "^5.5.0",
+    "mssql": "^12.7.2",
+    "tedious": "^20.0.0"
+  }
+}
