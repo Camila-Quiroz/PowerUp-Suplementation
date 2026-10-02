@@ -1,0 +1,1133 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>PowerUp Supplementation | Catálogo</title>
+
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@600;700&family=Raleway:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --black: #090909;
+      --panel: #151515;
+      --gold: #f5bd18;
+      --cream: #fffdf7;
+      --muted: #b7b3aa;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      width: 100%;
+      margin: 0;
+      background: var(--black);
+      color: var(--cream);
+      font-family: "Raleway", sans-serif;
+      padding-bottom: 110px;
+    }
+
+    .brand-display { font-family: "Inknut Antiqua", serif; }
+
+    .metal-grid {
+      background-image:
+        linear-gradient(rgba(245,189,24,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,189,24,.055) 1px, transparent 1px);
+      background-size: 38px 38px;
+    }
+
+    .hero-photo:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, #090909 4%, rgba(9,9,9,.72) 44%, rgba(9,9,9,.18) 100%);
+    }
+
+    .gold-rule {
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .catalog-card {
+      background: linear-gradient(145deg, #1b1b1b, #101010);
+      border: 1px solid rgba(255,255,255,.1);
+      transition: .22s ease;
+    }
+
+    .catalog-card:hover,
+    .catalog-card:focus-within {
+      transform: translateY(-4px);
+      border-color: rgba(245,189,24,.72);
+      box-shadow: 0 18px 38px rgba(0,0,0,.4);
+    }
+
+    .filter-btn[aria-pressed="true"] {
+      background: var(--gold);
+      color: #090909;
+      border-color: var(--gold);
+    }
+
+    .reveal { animation: enter .65s both; }
+
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .add-cart-btn {
+      width: 100%;
+      margin-top: 18px;
+      padding: 12px 15px;
+      background: var(--gold);
+      color: #090909;
+      border: none;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .add-cart-btn:hover { background: #fff; transform: translateY(-1px); }
+    .add-cart-btn:active { transform: scale(.98); }
+
+    .add-cart-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      background: #444;
+    }
+
+    #cart-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 9999;
+      background: rgba(9,9,9,.97);
+      border-top: 2px solid var(--gold);
+      box-shadow: 0 -12px 35px rgba(0,0,0,.55);
+      backdrop-filter: blur(12px);
+    }
+
+    .cart-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+      padding: 12px 18px;
+    }
+
+    .cart-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .cart-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .cart-icon {
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gold);
+      color: #090909;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      min-width: 21px;
+      height: 21px;
+      padding: 0 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: #090909;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .cart-button {
+      background: var(--gold);
+      color: #090909;
+      border: none;
+      padding: 13px 22px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .cart-button:hover { background: #fff; }
+    .cart-button:disabled { opacity: .45; cursor: not-allowed; }
+
+    #cart-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.72);
+      padding: 15px;
+    }
+
+    #cart-modal.active { display: flex; }
+
+    .cart-modal-content {
+      width: 100%;
+      max-width: 650px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: #111;
+      border: 1px solid rgba(245,189,24,.55);
+      box-shadow: 0 25px 70px rgba(0,0,0,.7);
+    }
+
+    .cart-modal-header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px;
+      background: #111;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    .close-cart {
+      width: 35px;
+      height: 35px;
+      border: 1px solid #ffffff30;
+      background: #181818;
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .cart-items { padding: 15px; }
+
+    .cart-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .cart-item-image {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      background: #080808;
+      flex-shrink: 0;
+    }
+
+    .cart-item-info { flex: 1; min-width: 0; }
+
+    .cart-item-name {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .cart-item-brand {
+      margin-top: 3px;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .cart-item-price {
+      margin-top: 6px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .quantity-btn {
+      width: 28px;
+      height: 28px;
+      background: #202020;
+      color: #fff;
+      border: 1px solid #ffffff20;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .quantity-number {
+      min-width: 25px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .remove-item {
+      color: #ff7777;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0 15px;
+      padding: 18px 0;
+      border-top: 1px solid rgba(255,255,255,.1);
+    }
+
+    .cart-total strong { color: var(--gold); font-size: 21px; }
+
+    .instagram-order {
+      width: calc(100% - 30px);
+      margin: 0 15px 15px;
+      padding: 15px;
+      border: none;
+      background: var(--gold);
+      color: #090909;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      cursor: pointer;
+    }
+
+    .instagram-order:hover { background: #fff; }
+
+    .clear-cart {
+      display: block;
+      margin: 0 auto 20px;
+      border: none;
+      background: transparent;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .empty-cart {
+      padding: 45px 20px;
+      text-align: center;
+      color: #aaa;
+    }
+
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: 100px;
+      z-index: 11000;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 13px 20px;
+      background: var(--gold);
+      color: #090909;
+      font-size: 12px;
+      font-weight: 900;
+      transition: .3s ease;
+      white-space: nowrap;
+    }
+
+    #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 640px) {
+      body { padding-bottom: 105px; }
+      .cart-container { padding: 10px 12px; }
+      .cart-button { padding: 12px 13px; font-size: 10px; }
+      .cart-icon { width: 42px; height: 42px; }
+      .cart-text { display: none; }
+      .cart-total strong { font-size: 18px; }
+      #toast { max-width: 90%; white-space: normal; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal, .catalog-card { animation: none; transition: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+<header class="sticky top-0 z-30 w-full border-b border-[#f5bd1838] bg-[#090909ee] backdrop-blur">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 md:px-8">
+    <a href="#inicio" class="flex min-w-0 items-center gap-3">
+      <img loading="lazy" class="h-11 w-11 rounded-full object-cover" src="imagenes/logo_1.jpeg" alt="PowerUp Logo" />
+      <div class="leading-none">
+        <span class="block font-black tracking-[.18em] text-white text-[15px]">POWERUP</span>
+        <span class="mt-1 block text-[9px] font-bold tracking-[.3em] text-[#f5bd18] text-[15px]">SUPPLEMENTATION</span>
+      </div>
+    </a>
+    <nav class="hidden items-center gap-7 md:flex">
+      <a class="text-xs font-bold tracking-[.12em] text-white transition hover:text-[#f5bd18]" href="#indice">ÍNDICE</a>
+      <a class="text-xs font-bold tracking-[.12em] text-white transition hover:text-[#f5bd18]" href="#catalogo">CATÁLOGO</a>
+    </nav>
+    <a class="rounded-full border border-[#f5bd18] px-3 py-2 text-[10px] font-black tracking-[.1em] text-[#f5bd18] text-[15px]" href="#catalogo">SUPLEMENTOS</a>
+  </div>
+</header>
+
+<main>
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+<section id="inicio" class="metal-grid relative isolate w-full overflow-hidden">
+  <div class="hero-photo absolute inset-0" aria-hidden="true">
+    <img loading="lazy" class="h-full w-full object-cover opacity-75"
+      src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1920"
+      alt="Gym training" />
+  </div>
+  <div class="relative mx-auto flex min-h-[620px] max-w-7xl items-center px-5 py-16 md:px-8">
+    <div class="reveal max-w-2xl">
+      <div class="mb-7 flex items-center gap-3">
+        <span class="h-px w-12 bg-[#f5bd18]"></span>
+        <p class="text-xs font-extrabold tracking-[.22em] text-[#f5bd18] text-[15px]">CATÁLOGO DE SUPLEMENTACIÓN</p>
+      </div>
+      <img loading="lazy" class="mb-7 h-32 w-32 rounded-2xl object-cover shadow-2xl shadow-black md:h-40 md:w-40"
+        src="imagenes/logo.png" alt="PowerUp Logo" />
+      <h1 class="brand-display max-w-2xl leading-tight text-white text-[30px] font-bold">
+        MÁS FUERZA. MÁS ENFOQUE.<br />MEJORES RESULTADOS.
+      </h1>
+      <p class="mt-6 max-w-xl text-base leading-relaxed text-[#ddd7ca] md:text-lg">
+        Escríbenos a Instagram @powerup1001 para más información.
+      </p>
+    </div>
+  </div>
+  <div class="absolute bottom-0 left-0 h-1 w-full gold-rule"></div>
+</section>
+
+<!-- =========================================================
+     ÍNDICE
+========================================================= -->
+<section id="indice" class="w-full bg-[#f6f2e8] px-5 py-16 text-[#090909] md:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="flex flex-col justify-between gap-5 border-b border-[#09090922] pb-7 md:flex-row md:items-end">
+      <div>
+        <p class="text-xs font-black tracking-[.2em] text-[#a86f00] text-[15px]">01 — ÍNDICE</p>
+        <h2 class="brand-display mt-3 leading-tight text-[#090909] text-[23px] font-bold">Encuentra tu objetivo.</h2>
+      </div>
+      <p class="max-w-md text-sm leading-relaxed text-[#514d46] text-[15px]">
+        Tenemos todo lo que tú necesitas para alcanzar tus metas.
+      </p>
+    </div>
+    <div class="mt-9 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <button class="border border-[#09090918] bg-white p-5 text-left transition hover:bg-[#090909] hover:text-white text-[15px] font-bold" data-category-link="Proteina">PROTEÍNAS</button>
+      <button class="border border-[#09090918] bg-white p-5 text-left transition hover:bg-[#090909] hover:text-white text-[15px] font-bold" data-category-link="Creatina">CREATINA</button>
+      <button class="border border-[#09090918] bg-white p-5 text-left transition hover:bg-[#090909] hover:text-white text-[15px] font-bold" data-category-link="Pre-Entreno">PRE-ENTRENOS</button>
+      <button class="border border-[#09090918] bg-white p-5 text-left transition hover:bg-[#090909] hover:text-white text-[15px] font-bold" data-category-link="Vitamina">VITAMINAS</button>
+      <button class="border border-[#09090918] bg-white p-5 text-left transition hover:bg-[#090909] hover:text-white text-[15px] font-bold" data-category-link="Aminoacidos">AMINOACIDOS</button>
+      <button class="border border-[#09090918] bg-white p-5 text-left transition hover:bg-[#090909] hover:text-white text-[15px] font-bold" data-category-link="Colágeno">COLAGENO</button>
+      <button class="border border-[#09090918] bg-white p-5 text-left transition hover:bg-[#090909] hover:text-white text-[15px] font-bold" data-category-link="Omega">OMEGA</button>
+      <button class="border border-[#09090918] bg-white p-5 text-left transition hover:bg-[#090909] hover:text-white text-[15px] font-bold" data-category-link="Quemador">QUEMADOR</button>
+      <button class="border border-[#09090918] bg-white p-5 text-left transition hover:bg-[#090909] hover:text-white text-[15px] font-bold" data-category-link="Precursor">PRECURSOR</button>
+      <button class="bg-[#f5bd18] p-5 text-left transition hover:bg-[#090909] hover:text-white text-[15px] font-bold" data-category-link="all">VER TODO</button>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     CATÁLOGO
+========================================================= -->
+<section id="catalogo" class="metal-grid w-full px-5 py-16 md:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="flex flex-col gap-7 border-b border-[#f5bd1838] pb-8 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <p class="text-xs font-black tracking-[.2em] text-[#f5bd18] text-[15px]">02 — CATÁLOGO</p>
+        <h2 class="brand-display mt-3 leading-tight text-white text-[23px] font-bold">Suplementos.</h2>
+      </div>
+      <div class="w-full max-w-md">
+        <label class="mb-2 block text-xs font-bold tracking-[.08em] text-white text-[15px]" for="product-search">BUSCAR PRODUCTO</label>
+        <input id="product-search" class="w-full border border-[#ffffff26] bg-[#121212] py-3 pl-4 pr-4 text-sm text-white outline-none transition focus:border-[#f5bd18] focus:ring-1 focus:ring-[#f5bd18] text-[15px]" type="search" placeholder="Marca, producto o categoría" />
+      </div>
+    </div>
+
+    <div class="mt-7 flex flex-wrap gap-2" role="group" aria-label="Filtrar por categoría">
+      <button class="filter-btn border border-[#ffffff30] px-4 py-2 text-xs font-bold transition bg-[#f5bd18] text-[#090909] text-[15px]" data-filter="all" aria-pressed="true">TODO</button>
+      <button class="filter-btn border border-[#ffffff30] px-4 py-2 text-xs font-bold transition bg-[#121212] text-white text-[15px]" data-filter="Proteina" aria-pressed="false">PROTEÍNAS</button>
+      <button class="filter-btn border border-[#ffffff30] px-4 py-2 text-xs font-bold transition bg-[#121212] text-white text-[15px]" data-filter="Creatina" aria-pressed="false">CREATINA</button>
+      <button class="filter-btn border border-[#ffffff30] px-4 py-2 text-xs font-bold transition bg-[#121212] text-white text-[15px]" data-filter="Pre-Entreno" aria-pressed="false">PRE-ENTRENOS</button>
+      <button class="filter-btn border border-[#ffffff30] px-4 py-2 text-xs font-bold transition bg-[#121212] text-white text-[15px]" data-filter="Vitamina" aria-pressed="false">VITAMINAS</button>
+      <button class="filter-btn border border-[#ffffff30] px-4 py-2 text-xs font-bold transition bg-[#121212] text-white text-[15px]" data-filter="Aminoacidos" aria-pressed="false">AMINOACIDOS</button>
+      <button class="filter-btn border border-[#ffffff30] px-4 py-2 text-xs font-bold transition bg-[#121212] text-white text-[15px]" data-filter="Colágeno" aria-pressed="false">COLAGENO</button>
+      <button class="filter-btn border border-[#ffffff30] px-4 py-2 text-xs font-bold transition bg-[#121212] text-white text-[15px]" data-filter="Omega" aria-pressed="false">OMEGA</button>
+      <button class="filter-btn border border-[#ffffff30] px-4 py-2 text-xs font-bold transition bg-[#121212] text-white text-[15px]" data-filter="Quemador" aria-pressed="false">QUEMADOR</button>
+      <button class="filter-btn border border-[#ffffff30] px-4 py-2 text-xs font-bold transition bg-[#121212] text-white text-[15px]" data-filter="Precursor" aria-pressed="false">PRECURSOR</button>
+    </div>
+
+    <div id="catalog-results" class="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+    <p id="empty-state" class="mt-8 hidden border border-dashed border-[#f5bd1870] bg-[#141414] px-6 py-12 text-center text-sm text-[#f5bd18] text-[15px] italic">
+      No encontramos productos con esos criterios. Prueba otra búsqueda o categoría.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+<footer class="w-full border-t border-[#f5bd1838] bg-[#090909] px-5 py-8 md:px-8">
+  <div class="mx-auto flex max-w-7xl flex-col justify-between gap-3 text-xs md:flex-row">
+    <p class="font-black tracking-[.12em] text-white text-[15px]">POWERUP SUPPLEMENTATION © 2026</p>
+    <p class="text-[#b7b3aa] text-[15px]">Catálogo digital · Precios públicos sujetos a actualización.</p>
+  </div>
+</footer>
+
+<!-- =========================================================
+     CARRITO INFERIOR
+========================================================= -->
+<div id="cart-bar">
+  <div class="cart-container">
+    <div class="cart-main">
+      <div class="cart-info">
+        <div class="relative">
+          <div class="cart-icon">🛒</div>
+          <span id="cart-count" class="cart-count">0</span>
+        </div>
+        <div class="cart-text">
+          <p class="text-[10px] font-bold tracking-[.12em] text-[#b7b3aa]">TU PEDIDO</p>
+          <p id="cart-summary" class="mt-1 text-sm font-extrabold text-white">No has agregado productos</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden text-right sm:block">
+          <span class="block text-[9px] font-bold tracking-[.12em] text-[#b7b3aa]">TOTAL</span>
+          <strong id="cart-total-bar" class="text-lg font-black text-[#f5bd18]">$ 0</strong>
+        </div>
+        <button id="open-cart" class="cart-button" type="button">VER CARRITO</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     MODAL DEL CARRITO
+========================================================= -->
+<div id="cart-modal">
+  <div class="cart-modal-content">
+    <div class="cart-modal-header">
+      <div>
+        <p class="text-[10px] font-black tracking-[.15em] text-[#f5bd18]">POWERUP SUPPLEMENTATION</p>
+        <h2 class="mt-1 text-xl font-black text-white">Tu pedido</h2>
+      </div>
+      <button id="close-cart" class="close-cart" type="button" aria-label="Cerrar carrito">×</button>
+    </div>
+    <div id="cart-items" class="cart-items"></div>
+    <div id="cart-total-section" class="hidden">
+      <div class="cart-total">
+        <span class="text-sm font-bold text-white">TOTAL DEL PEDIDO</span>
+        <strong id="cart-total-modal">$ 0</strong>
+      </div>
+      <button id="instagram-order" class="instagram-order" type="button">📸 PEDIR POR INSTAGRAM</button>
+      <button id="clear-cart" class="clear-cart" type="button">Vaciar carrito</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+<div id="toast"></div>
+
+<!-- =========================================================
+     PLANTILLA PRODUCTO
+========================================================= -->
+<template id="product-card-template">
+  <article class="catalog-card overflow-hidden">
+    <div class="relative h-48 overflow-hidden bg-[#0c0c0c]">
+      <img class="h-full w-full object-cover"
+        src="https://via.placeholder.com/400x300/333/f5bd18?text=Suplemento" alt="Producto" />
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40"></div>
+    </div>
+    <div class="p-5">
+      <div class="flex items-start justify-between gap-3 mb-4">
+        <span class="bg-[#f5bd18] px-2 py-1 text-[9px] font-black tracking-[.1em] text-[#090909]" data-field="categoria">CATEGORÍA</span>
+      </div>
+      <p class="w-fit text-[10px] font-black tracking-[.16em] text-[#f5bd18] mb-3" data-field="marca">MARCA</p>
+      <h3 class="min-h-[3rem] text-base font-extrabold leading-snug text-white" data-field="nombre">Nombre del suplemento</h3>
+      <p class="mt-2 min-h-[1.25rem] text-xs text-[#b7b3aa]" data-field="formato">Presentación</p>
+      <p class="mt-1 text-xs text-[#b7b3aa]" data-field="stock">Stock: 0 unidades</p>
+      <div class="mt-5 flex items-end justify-between gap-3 border-t border-white/10 pt-4">
+        <div>
+          <span class="block text-[9px] font-bold tracking-[.12em] text-[#b7b3aa]">PRECIO</span>
+          <strong class="mt-1 block w-fit text-xl font-black text-[#f5bd18]" data-field="precio">$ 0</strong>
+        </div>
+      </div>
+      <button class="add-cart-btn" type="button" data-add-product>+ AGREGAR AL CARRITO</button>
+    </div>
+  </article>
+</template>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+  /* =========================================================
+     CONFIGURACIÓN INSTAGRAM
+  ========================================================= */
+  const INSTAGRAM_USERNAME = "powerup1001";
+  const INSTAGRAM_URL = "https://www.instagram.com/powerup1001?igsi=OHliMWsxZzF1OGJh";
+  const INSTAGRAM_DM_URL = "https://ig.me/m/" + INSTAGRAM_USERNAME;
+
+  /* =========================================================
+     PRODUCTOS
+  ========================================================= */
+  const products = [];
+
+  /* =========================================================
+     API SQL SERVER
+  ========================================================= */
+  async function loadProducts() {
+    try {
+      const response = await fetch("/api/products");
+      if (!response.ok) throw new Error("Error cargando productos");
+      const data = await response.json();
+      products.length = 0;
+      data.forEach(p => products.push(p));
+    } catch (error) {
+      console.error("loadProducts ERROR:", error);
+      showToast("No se pudo cargar el catálogo desde SQL Server.");
+    }
+  }
+
+  /* =========================================================
+     ELEMENTOS
+  ========================================================= */
+  const results = document.getElementById("catalog-results");
+  const searchInput = document.getElementById("product-search");
+  const emptyState = document.getElementById("empty-state");
+  const filterButtons = [...document.querySelectorAll(".filter-btn")];
+  const categoryLinks = [...document.querySelectorAll("[data-category-link]")];
+  const cartBar = document.getElementById("cart-bar");
+  const cartCount = document.getElementById("cart-count");
+  const cartSummary = document.getElementById("cart-summary");
+  const cartTotalBar = document.getElementById("cart-total-bar");
+  const openCartButton = document.getElementById("open-cart");
+  const closeCartButton = document.getElementById("close-cart");
+  const cartModal = document.getElementById("cart-modal");
+  const cartItemsContainer = document.getElementById("cart-items");
+  const cartTotalSection = document.getElementById("cart-total-section");
+  const cartTotalModal = document.getElementById("cart-total-modal");
+  const instagramOrderButton = document.getElementById("instagram-order");
+  const clearCartButton = document.getElementById("clear-cart");
+  const toast = document.getElementById("toast");
+
+  /* =========================================================
+     VARIABLES
+  ========================================================= */
+  let activeFilter = "all";
+  let cart = [];
+
+  /* =========================================================
+     FORMATO MONEDA
+  ========================================================= */
+  function formatPrice(value) {
+    return "$ " + Number(value).toLocaleString("es-CO");
+  }
+
+  /* =========================================================
+     TOAST
+  ========================================================= */
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => { toast.classList.remove("show"); }, 2500);
+  }
+
+  /* =========================================================
+     IMAGEN
+  ========================================================= */
+  function getImage(product) {
+    if (!product.imagen) {
+      return "https://via.placeholder.com/400x300/333/f5bd18?text=Sin+Imagen";
+    }
+    if (product.imagen.startsWith("imagenes/") || product.imagen.startsWith("http")) {
+      return product.imagen;
+    }
+    return "imagenes/" + product.imagen;
+  }
+
+  /* =========================================================
+     CREAR TARJETA
+  ========================================================= */
+  function createProductCard(product) {
+    const template = document.getElementById("product-card-template");
+    const fragment = template.content.cloneNode(true);
+    const card = fragment.querySelector("article");
+
+    const catSpan = card.querySelector("[data-field='categoria']");
+    const brandP = card.querySelector("[data-field='marca']");
+    const nameH3 = card.querySelector("[data-field='nombre']");
+    const formatP = card.querySelector("[data-field='formato']");
+    const priceStrong = card.querySelector("[data-field='precio']");
+    const stockP = card.querySelector("[data-field='stock']");
+    const img = card.querySelector("img");
+    const addButton = card.querySelector("[data-add-product]");
+
+    catSpan.textContent = product.categoria || "Suplemento";
+    brandP.textContent = product.marca || "";
+    nameH3.textContent = product.nombre || "";
+    formatP.textContent = product.formato || "";
+    priceStrong.textContent = formatPrice(product.precio);
+    img.src = getImage(product);
+    img.alt = product.nombre;
+
+    const stock = Number(product.stock) || 0;
+    stockP.textContent = `Stock: ${stock} unidades`;
+
+    if (stock <= 0) {
+      stockP.textContent = "AGOTADO";
+      stockP.classList.add("text-red-500", "font-bold");
+      addButton.disabled = true;
+      addButton.textContent = "SIN STOCK";
+    } else {
+      addButton.addEventListener("click", () => {
+        addToCart(product);
+      });
+    }
+
+    return card;
+  }
+
+  /* =========================================================
+     RENDER CATALOGO
+  ========================================================= */
+  function renderCatalog(productsArray) {
+    results.innerHTML = "";
+    if (!productsArray || productsArray.length === 0) {
+      emptyState.classList.remove("hidden");
+      return;
+    }
+    emptyState.classList.add("hidden");
+    productsArray.forEach(product => {
+      const card = createProductCard(product);
+      results.appendChild(card);
+    });
+  }
+
+  /* =========================================================
+     FILTRAR PRODUCTOS
+  ========================================================= */
+  function filterProducts() {
+    const query = searchInput.value.trim().toLowerCase();
+    const filtered = products.filter(product => {
+      const matchesCategory =
+        activeFilter === "all" ||
+        product.categoria.toLowerCase() === activeFilter.toLowerCase();
+
+      const matchesSearch =
+        !query ||
+        product.nombre.toLowerCase().includes(query) ||
+        product.marca.toLowerCase().includes(query) ||
+        product.categoria.toLowerCase().includes(query) ||
+        (product.formato && product.formato.toLowerCase().includes(query));
+
+      return matchesCategory && matchesSearch;
+    });
+    renderCatalog(filtered);
+  }
+
+  /* =========================================================
+     FILTROS
+  ========================================================= */
+  function setFilter(filter) {
+    activeFilter = filter;
+    filterButtons.forEach(button => {
+      const isActive = button.dataset.filter === filter;
+      button.setAttribute("aria-pressed", String(isActive));
+      if (isActive) {
+        button.classList.add("bg-[#f5bd18]", "text-[#090909]");
+        button.classList.remove("bg-[#121212]", "text-white");
+      } else {
+        button.classList.remove("bg-[#f5bd18]", "text-[#090909]");
+        button.classList.add("bg-[#121212]", "text-white");
+      }
+    });
+    filterProducts();
+  }
+
+  /* =========================================================
+     AGREGAR AL CARRITO (con validación de stock)
+  ========================================================= */
+  function addToCart(product) {
+    const stock = Number(product.stock) || 0;
+    const existing = cart.find(item => item.product === product);
+    const currentQty = existing ? existing.quantity : 0;
+
+    if (currentQty + 1 > stock) {
+      showToast(`Solo quedan ${stock} unidades de este producto.`);
+      return;
+    }
+
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ product: product, quantity: 1 });
+    }
+
+    updateCart();
+    showToast(product.nombre + " agregado al carrito");
+  }
+
+  /* =========================================================
+     CAMBIAR CANTIDAD
+  ========================================================= */
+  function changeQuantity(index, amount) {
+    if (!cart[index]) return;
+    const stock = Number(cart[index].product.stock) || 0;
+    const newQty = cart[index].quantity + amount;
+
+    if (newQty > stock) {
+      showToast(`Solo quedan ${stock} unidades de este producto.`);
+      return;
+    }
+
+    cart[index].quantity = newQty;
+    if (cart[index].quantity <= 0) {
+      cart.splice(index, 1);
+    }
+    updateCart();
+  }
+
+  /* =========================================================
+     ELIMINAR PRODUCTO
+  ========================================================= */
+  function removeFromCart(index) {
+    if (!cart[index]) return;
+    cart.splice(index, 1);
+    updateCart();
+  }
+
+  /* =========================================================
+     TOTAL
+  ========================================================= */
+  function calculateTotal() {
+    return cart.reduce((total, item) => total + item.product.precio * item.quantity, 0);
+  }
+
+  function calculateQuantity() {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  }
+
+  /* =========================================================
+     ACTUALIZAR CARRITO
+  ========================================================= */
+  function updateCart() {
+    const quantity = calculateQuantity();
+    const total = calculateTotal();
+
+    cartCount.textContent = quantity;
+    cartTotalBar.textContent = formatPrice(total);
+
+    if (quantity === 0) {
+      cartSummary.textContent = "No has agregado productos";
+    } else if (quantity === 1) {
+      cartSummary.textContent = "1 producto seleccionado";
+    } else {
+      cartSummary.textContent = quantity + " productos seleccionados";
+    }
+
+    renderCart();
+  }
+
+  /* =========================================================
+     RENDER CARRITO
+  ========================================================= */
+  function renderCart() {
+    cartItemsContainer.innerHTML = "";
+
+    if (cart.length === 0) {
+      cartItemsContainer.innerHTML = `
+        <div class="empty-cart">
+          <div class="text-4xl mb-4">🛒</div>
+          <p class="font-bold text-white">Tu carrito está vacío</p>
+          <p class="mt-2 text-xs text-[#aaa]">Agrega los productos que deseas pedir.</p>
+        </div>
+      `;
+      cartTotalSection.classList.add("hidden");
+      return;
+    }
+
+    cartTotalSection.classList.remove("hidden");
+
+    cart.forEach((item, index) => {
+      const product = item.product;
+      const subtotal = product.precio * item.quantity;
+      const itemElement = document.createElement("div");
+      itemElement.className = "cart-item";
+
+      itemElement.innerHTML = `
+        <img class="cart-item-image" src="${getImage(product)}" alt="${escapeHtml(product.nombre)}">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${escapeHtml(product.nombre)}</div>
+          <div class="cart-item-brand">${escapeHtml(product.marca)}</div>
+          <div class="text-[10px] text-[#aaa] mt-1">${escapeHtml(product.formato)}</div>
+          <div class="cart-item-price">${formatPrice(product.precio)}</div>
+          <div class="quantity-controls">
+            <button class="quantity-btn" data-minus="${index}" type="button">−</button>
+            <span class="quantity-number">${item.quantity}</span>
+            <button class="quantity-btn" data-plus="${index}" type="button">+</button>
+            <span class="ml-2 text-[11px] font-bold text-[#f5bd18]">${formatPrice(subtotal)}</span>
+          </div>
+          <button class="remove-item mt-2" data-remove="${index}" type="button">ELIMINAR</button>
+        </div>
+      `;
+      cartItemsContainer.appendChild(itemElement);
+    });
+
+    document.querySelectorAll("[data-minus]").forEach(button => {
+      button.addEventListener("click", () => {
+        changeQuantity(Number(button.dataset.minus), -1);
+      });
+    });
+    document.querySelectorAll("[data-plus]").forEach(button => {
+      button.addEventListener("click", () => {
+        changeQuantity(Number(button.dataset.plus), 1);
+      });
+    });
+    document.querySelectorAll("[data-remove]").forEach(button => {
+      button.addEventListener("click", () => {
+        removeFromCart(Number(button.dataset.remove));
+      });
+    });
+
+    cartTotalModal.textContent = formatPrice(calculateTotal());
+  }
+
+  /* =========================================================
+     PROTEGER TEXTO HTML
+  ========================================================= */
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  /* =========================================================
+     CREAR MENSAJE PARA INSTAGRAM
+  ========================================================= */
+  function createInstagramMessage() {
+    let message = "Hola PowerUp Supplementation 👋\n\n";
+    message += "Quiero realizar el siguiente pedido:\n\n";
+    cart.forEach((item, index) => {
+      const product = item.product;
+      const subtotal = product.precio * item.quantity;
+      message += `${index + 1}. ${product.marca} - ${product.nombre}\n`;
+      message += `Presentación: ${product.formato}\n`;
+      message += `Cantidad: ${item.quantity}\n`;
+      message += `Precio unitario: ${formatPrice(product.precio)}\n`;
+      message += `Subtotal: ${formatPrice(subtotal)}\n\n`;
+    });
+    message += `TOTAL: ${formatPrice(calculateTotal())}\n\n`;
+    message += "Quedo pendiente para confirmar disponibilidad y realizar el pedido. Gracias.";
+    return message;
+  }
+
+  /* =========================================================
+     COPIAR MENSAJE
+  ========================================================= */
+  async function copyMessageToClipboard(message) {
+    try {
+      await navigator.clipboard.writeText(message);
+      return true;
+    } catch (error) {
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = message;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        const successful = document.execCommand("copy");
+        textarea.remove();
+        return successful;
+      } catch (fallbackError) {
+        return false;
+      }
+    }
+  }
+
+  /* =========================================================
+     GUARDAR PEDIDO
+  ========================================================= */
+  async function saveOrder() {
+    const payload = {
+      items: cart.map(item => ({
+        productId: Number(item.product.id),
+        quantity: Number(item.quantity)
+      }))
+    };
+
+    const response = await fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || "No se pudo registrar el pedido.");
+    }
+    return data;
+  }
+
+  /* =========================================================
+     PEDIR POR INSTAGRAM
+  ========================================================= */
+  async function orderOnInstagram() {
+    if (cart.length === 0) {
+      showToast("Primero agrega productos al carrito");
+      return;
+    }
+
+    try {
+      await saveOrder();
+    } catch (error) {
+      console.error(error);
+      showToast(error.message || "No se pudo guardar el pedido.");
+      return;
+    }
+
+    const message = createInstagramMessage();
+    const copied = await copyMessageToClipboard(message);
+
+    if (copied) {
+      showToast("Pedido copiado. Abriendo Instagram...");
+    } else {
+      showToast("Abriendo Instagram...");
+    }
+
+    setTimeout(() => {
+      window.location.href = INSTAGRAM_DM_URL;
+    }, 700);
+  }
+
+  /* =========================================================
+     ABRIR CARRITO
+  ========================================================= */
+  openCartButton.addEventListener("click", () => {
+    cartModal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  });
+
+  /* =========================================================
+     CERRAR CARRITO
+  ========================================================= */
+  closeCartButton.addEventListener("click", () => {
+    cartModal.classList.remove("active");
+    document.body.style.overflow = "";
+  });
+
+  cartModal.addEventListener("click", event => {
+    if (event.target === cartModal) {
+      cartModal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      cartModal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+  });
+
+  /* =========================================================
+     BOTÓN INSTAGRAM
+  ========================================================= */
+  instagramOrderButton.addEventListener("click", orderOnInstagram);
+
+  /* =========================================================
+     VACIAR CARRITO
+  ========================================================= */
+  clearCartButton.addEventListener("click", () => {
+    if (cart.length === 0) return;
+    const confirmation = confirm("¿Quieres vaciar todo el carrito?");
+    if (!confirmation) return;
+    cart = [];
+    updateCart();
+    showToast("Carrito vaciado");
+  });
+
+  /* =========================================================
+     FILTROS
+  ========================================================= */
+  filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      setFilter(button.dataset.filter);
+    });
+  });
+
+  /* =========================================================
+     ÍNDICE
+  ========================================================= */
+  categoryLinks.forEach(button => {
+    button.addEventListener("click", () => {
+      const category = button.dataset.categoryLink;
+      setFilter(category === "all" ? "all" : category);
+      document.getElementById("catalogo").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  });
+
+  /* =========================================================
+     BUSCADOR
+  ========================================================= */
+  searchInput.addEventListener("input", filterProducts);
+
+  /* =========================================================
+     INICIALIZAR
+  ========================================================= */
+  await loadProducts();
+  filterProducts();
+  updateCart();
+
+  console.log("PowerUp Supplementation: catálogo cargado correctamente.");
+  console.log("Productos disponibles:", products.length);
+
+});
+
+</script>
+
+</body>
+</html>
